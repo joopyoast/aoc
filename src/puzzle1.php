@@ -1,5 +1,7 @@
 <?php
 
+use JetBrains\PhpStorm\Pure;
+
 $measurements = explode("\n", file_get_contents( __DIR__ . '/input/puzzle1.txt' ));
 
 echo count($measurements) . PHP_EOL;
@@ -9,29 +11,25 @@ $measurementWindows = [];
 
 
 final class MeasurementWindow {
+	private array $measurements = [];
 
-	/** @var array */
-	private $measurements = [];
-
-	public function isFull()
-	{
+	public function isFull(): bool {
 		return count($this->measurements) === 3;
 	}
 
-	public function hasRoom() {
+	public function hasRoom(): bool {
 		return $this->isFull() === false;
 	}
 
-	public function add($measurement) {
+	public function add($measurement): void {
 		if ($this->isFull()) {
 			return;
 		}
 		$this->measurements[] = $measurement;
 	}
 
-	public function isHigherThan( MeasurementWindow $previousWindow ) {
+	public function isHigherThan( MeasurementWindow $previousWindow ): bool {
 		return array_sum($this->measurements) > array_sum($previousWindow->measurements);
-
 	}
 }
 
@@ -39,10 +37,8 @@ final class MeasurementWindow {
 foreach ($measurements as $measurement) {
 	$added = false;
 	$measurementWindows[] = new MeasurementWindow();
-	foreach ($measurementWindows as $measurementWindow) {
-		if ($measurementWindow->hasRoom()) {
-			$measurementWindow->add($measurement);
-		}
+	foreach ( array_filter($measurementWindows, static fn ( MeasurementWindow $window) => $window->hasRoom()) as $measurementWindow) {
+		$measurementWindow->add($measurement);
 	}
 }
 
