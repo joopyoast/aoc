@@ -19,17 +19,13 @@ final class OxygenGenerator {
 		while (count($ratings) > 1) {
 			$ones = 0;
 			$zeros = 0;
-			$carry = 0;
 			foreach ($ratings as $rating) {
 				$digit = $rating->getDiget($round);
 				$ones = $digit === 1 ? $ones + 1 : $ones;
 				$zeros = $digit === 0 ? $zeros + 1 : $zeros;
 			}
 
-			if ($ones >= $zeros) {
-				$carry = 1;
-			}
-
+			$carry = $ones >= $zeros ? 1 : 0;
 			$ratings = array_filter($ratings, static fn ( BitRate $bitRate) => $bitRate->digitIs($carry, $round));
 			++$round;
 		}

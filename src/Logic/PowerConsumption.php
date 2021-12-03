@@ -34,13 +34,8 @@ final class PowerConsumption {
 				$zeros = $digit === 0 ? $zeros + 1 : $zeros;
 			}
 
-			if ($ones > $zeros) {
-				$gammaRate .= '1';
-				$epsilonRate .= '0';
-			} else {
-				$gammaRate .= '0';
-				$epsilonRate .= '1';
-			}
+			$gammaRate .= $ones > $zeros ? '1' : '0';
+			$epsilonRate .= $ones > $zeros ? '0' : '1';
 		}
 
 		return [

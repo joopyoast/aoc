@@ -18,17 +18,13 @@ final class CO2Scrubber {
 		while (count($ratings) > 1) {
 			$ones = 0;
 			$zeros = 0;
-			$carry = 1;
 			foreach ($ratings as $rating) {
 				$digit = $rating->getDiget($round);
 				$ones = $digit === 1 ? $ones + 1 : $ones;
 				$zeros = $digit === 0 ? $zeros + 1 : $zeros;
 			}
 
-			if ($ones >= $zeros) {
-				$carry = 0;
-			}
-
+			$carry = $ones >= $zeros ? 0 : 1;
 			$ratings = array_filter($ratings, static fn ( BitRate $bitRate) => $bitRate->digitIs($carry, $round));
 			++$round;
 		}
