@@ -1,14 +1,13 @@
 <?php
 
+use App\Logic\Movement;
+use App\Logic\Movements;
+use App\Logic\Position;
+
 require_once __DIR__ . '/boot.php';
 
-
-$movements = \App\Logic\Movements::fromFile( __DIR__ . '/input/puzzle2.txt' );
-$position = \App\Logic\Position::zero();
-
-$movements->map(fn(\App\Logic\Movement $movement) => $position->move($movement));
+$movements = Movements::fromFile( __DIR__ . '/input/puzzle2.txt' );
+$position = Position::zero();
+$movements->map(fn( Movement $movement) => $position->move($movement));
 
 echo $position->getHorizontal() * $position->getDepth();
-
-
-

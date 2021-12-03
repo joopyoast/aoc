@@ -1,14 +1,11 @@
 <?php
 
-use JetBrains\PhpStorm\Pure;
-
 $measurements = explode("\n", file_get_contents( __DIR__ . '/input/puzzle1.txt' ));
 
 echo count($measurements) . PHP_EOL;
 
 /** @var MeasurementWindow[] $measurementWindows */
 $measurementWindows = [];
-
 
 final class MeasurementWindow {
 	private array $measurements = [];
@@ -33,9 +30,7 @@ final class MeasurementWindow {
 	}
 }
 
-
 foreach ($measurements as $measurement) {
-	$added = false;
 	$measurementWindows[] = new MeasurementWindow();
 	foreach ( array_filter($measurementWindows, static fn ( MeasurementWindow $window) => $window->hasRoom()) as $measurementWindow) {
 		$measurementWindow->add($measurement);
@@ -58,13 +53,4 @@ foreach ($measurementWindows as $window) {
 	$previousWindow = $window;
 }
 
-
 echo $increased . PHP_EOL;
-
-
-
-
-
-
-
-
