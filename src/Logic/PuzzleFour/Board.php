@@ -13,6 +13,9 @@ final class Board {
 	}
 
 	public function stamp( int $draw ): void {
+		if ($this->hasBingo()) {
+			return;
+		}
 		array_map(
 			fn (array $row) => array_map(
 				fn (Number $number) => $number->mark($draw),

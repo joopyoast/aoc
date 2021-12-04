@@ -2,6 +2,8 @@
 
 use App\Logic\PuzzleFour\Board;
 use App\Logic\PuzzleFour\Game;
+use App\Logic\PuzzleFour\IWantToWinWinningStrategy;
+use App\Logic\PuzzleFour\LetSquidFaceWin;
 use App\Logic\PuzzleFour\Number;
 
 require_once __DIR__ . '/boot.php';
@@ -11,28 +13,43 @@ $foo = explode("\n", file_get_contents( __DIR__ . '/input/puzzle4.txt' ) );
 $drawings = explode(',', array_shift($foo));
 
 $numbers = [];
-$index = 0;
 $boards = [];
+$index = 0;
+$numbers[$index] = [];
+$blocks = [[]];
+$blockIndex = 0;
 foreach ($foo as $bar) {
 	if ($bar === '') {
-		$numbers = [];
-		$index = 0;
+		++$index;
+		$blocks[$index] = [];
+		$blockIndex = 0;
 		continue;
 	}
-	++$index;
 	$row = explode(' ', $bar);
 	foreach ( $row as $number) {
-		$numbers[$index][] = new Number((int)$number);
+		$blocks[$index][$blockIndex][] = new Number((int)$number);
 	}
-	$boards[] = new Board(array_values($numbers));
+	++$blockIndex;
 }
 
-$game = new Game( $boards );
+foreach ($blocks as $index => $block) {
+	$boards[] = new Board($block);
+}
+
+
+$game = new Game( $boards, new IWantToWinWinningStrategy());
 
 foreach ( $drawings as $draw ) {
 	$game->draw( (int)$draw );
 	if (($board = $game->winningBoard()) !== null) {
-		echo 'Wnner with score ' . $game->getLastDrawnNumber() * $board->score() . PHP_EOL;
+		echo 'Winner with score ' . $game->getLastDrawnNumber() * $board->score() . PHP_EOL;
 		break;
 	}
 }
+
+$game = new Game( $boards, new LetSquidFaceWin( $boards ));
+
+foreach ( $drawings as $draw ) {
+	$game->draw( (int)$draw );
+}
+echo 'Squid winner with score ' . $game->getLastDrawnNumber() * $game->winningBoard()->score() . PHP_EOL;

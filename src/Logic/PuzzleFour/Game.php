@@ -6,31 +6,23 @@ namespace App\Logic\PuzzleFour;
 final class Game {
 	/** @var Board[] */
 	private array $boards;
-	private ?int $lastDrawnNumber = null;
-	/** @var Board|mixed */
-	private mixed $winningBoard = null;
+	private WinningStrategy $winningStrategy;
 
-	public function __construct( array $boards ) {
+	public function __construct( array $boards, WinningStrategy $winningStrategy ) {
 		$this->boards = $boards;
+		$this->winningStrategy = $winningStrategy;
 	}
 
 	public function draw( int $draw ): void {
-		$this->lastDrawnNumber = $draw;
-		foreach ($this->boards as $boardKey => $board) {
-			$board->stamp( $draw );
-			if ($board->hasBingo()) {
-				$this->winningBoard = $board;
-				break;
-			}
-		}
+		$this->winningStrategy->draw($this->boards, $draw);
 	}
 
 	public function getLastDrawnNumber(): int {
-		return $this->lastDrawnNumber ?: 0;
+		return $this->winningStrategy->getLastDrawnNumber() ?: 0;
 	}
 
 	public function winningBoard(): ?Board
 	{
-		return $this->winningBoard;
+		return $this->winningStrategy->winningBoard();
 	}
 }
